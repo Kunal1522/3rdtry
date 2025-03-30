@@ -46,7 +46,7 @@ export default function CodeforcesProblemFetcher({ handle, onFormSubmit }) {
       <div className="w-full p-2 border border-gray-600 rounded bg-gray-700">
         <p className="mb-2">How many problems solved?</p>
         <div className="flex space-x-4">
-          {[1, 2, 3, 4].map((value) => (
+          {[3].map((value) => (
             <label key={value} className="flex items-center space-x-2">
               <input
                 type="radio"

@@ -1,69 +1,549 @@
 @import "tailwindcss";
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+  /* Base theme variables with default terminal theme */
+  --background: #000000;
+  --text: #4ade80;
+  --accent: #22543d;
+  --border: rgba(74, 222, 128, 0.3);
+  --primary: #4ade80;
+  --secondary: #22543d;
+  --highlight: rgba(74, 222, 128, 0.1);
+  --font-family: 'Courier New', monospace;
+  --border-radius: 0;
+  --card-bg: #0a0a0a;
+  --header-bg: #000000;
+  --footer-bg: #000000;
+  --box-shadow: none;
+  --button-style: solid;
+  --background-image: none;
 }
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background-color: var(--background);
+  color: var(--text);
+  font-family: var(--font-family);
+  overflow-x: hidden;
+  position: relative;
+  transition: background-color 0.5s, color 0.5s;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+/* Apply background image with overlay for non-terminal themes */
+body:not(.terminal-theme) {
+  background-image: var(--background-image);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
 }
 
+body:not(.terminal-theme)::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: -1;
+}
+
+/* Terminal-specific styling */
+.terminal-theme {
+  background-color: #000000;
+}
+
+/* Terminal scanlines effect */
+.effect-scanlines {
+  position: relative;
+}
+
+.effect-scanlines::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(
+    transparent 0%,
+    rgba(32, 128, 32, 0.2) 50%,
+    transparent 100%
+  );
+  background-size: 100% 4px;
+  background-repeat: repeat;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Parchment effect for Hero's Journey */
+.effect-parchment {
+  position: relative;
+}
+
+.effect-parchment::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('https://i.imgur.com/l0LocUq.png');
+  background-size: cover;
+  opacity: 0.1;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Pixelated effect for Pixel Kingdom */
+.effect-pixelated {
+  image-rendering: pixelated;
+}
+
+.effect-pixelated button, 
+.effect-pixelated .card {
+  transition: none !important;
+}
+
+.effect-pixelated::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('https://i.imgur.com/fHEgSk4.png');
+  background-size: cover;
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 9;
+}
+
+/* Hologram effect for Sci-Fi Command */
+.effect-hologram {
+  position: relative;
+}
+
+.effect-hologram::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    45deg,
+    rgba(127, 219, 255, 0.05) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(127, 219, 255, 0.05) 50%,
+    rgba(127, 219, 255, 0.05) 75%,
+    transparent 75%
+  );
+  background-size: 4px 4px;
+  pointer-events: none;
+  z-index: 9;
+  animation: hologram-grid 2s linear infinite;
+}
+
+@keyframes hologram-grid {
+  0% { background-position: 0 0; }
+  100% { background-position: 4px 4px; }
+}
+
+/* Treasure map effect */
+.effect-treasure-map {
+  position: relative;
+}
+
+.effect-treasure-map::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('https://i.imgur.com/6tLZq2g.png');
+  background-size: cover;
+  opacity: 0.07;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Smoke effect for Dark Overlord */
+.effect-smoke {
+  position: relative;
+}
+
+.effect-smoke::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('https://i.imgur.com/SXU3nkq.png');
+  background-size: cover;
+  opacity: 0.2;
+  pointer-events: none;
+  z-index: 9;
+  animation: smoke-drift 60s linear infinite;
+}
+
+@keyframes smoke-drift {
+  0% { background-position: 0 0; }
+  100% { background-position: 100% 100%; }
+}
+
+/* Button styles for each theme */
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border);
+  padding: 0.5em 1em;
+  font-size: 0.9em;
+  font-weight: 400;
+  font-family: var(--font-family);
+  background-color: transparent;
+  color: var(--text);
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  transition: all 0.2s ease;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+/* Default terminal buttons */
+.terminal-theme button {
+  border-radius: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Embossed buttons for Hero's Journey */
+.theme-heroes_journey button {
+  border: 1px solid var(--border);
+  background: linear-gradient(to bottom, #e8d8b0, #d9c7a8);
+  color: #3a2921;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+  font-weight: bold;
+  position: relative;
+}
+
+.theme-heroes_journey button:hover {
+  background: linear-gradient(to bottom, #f0e0b8, #e1cfa0);
+}
+
+.theme-heroes_journey button:active {
+  top: 1px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Pixel buttons for Pixel Kingdom */
+.theme-pixel_kingdom button {
+  border-width: 4px;
+  border-style: solid;
+  border-color: #ffde59 #aa9900 #aa9900 #ffde59;
+  padding: 0.3em 0.8em;
+  text-transform: uppercase;
+  image-rendering: pixelated;
+  transition: none;
+  box-shadow: none;
+  text-shadow: 2px 2px 0 #000;
+  letter-spacing: 1px;
+}
+
+.theme-pixel_kingdom button:hover {
+  filter: brightness(1.2);
+}
+
+.theme-pixel_kingdom button:active {
+  border-color: #aa9900 #ffde59 #ffde59 #aa9900;
+  transform: translate(2px, 2px);
+}
+
+/* Glowing buttons for Sci-Fi Command */
+.theme-sci_fi_command button {
+  border: 1px solid rgba(127, 219, 255, 0.3);
+  background-color: rgba(10, 20, 40, 0.6);
+  color: var(--primary);
+  box-shadow: 0 0 8px rgba(127, 219, 255, 0.3);
+  text-shadow: 0 0 4px var(--primary);
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-sci_fi_command button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, transparent 0%, rgba(127, 219, 255, 0.1) 50%, transparent 100%);
+  transform: translateX(-100%);
+  transition: transform 0.5s;
+}
+
+.theme-sci_fi_command button:hover {
+  box-shadow: 0 0 15px rgba(127, 219, 255, 0.5);
+}
+
+.theme-sci_fi_command button:hover::before {
+  transform: translateX(100%);
+}
+
+/* Weathered buttons for Treasure Hunter */
+.theme-treasure_hunter button {
+  background-color: #483224;
+  color: #e6bc6c;
+  border: 2px solid;
+  border-color: #7a5c3d;
+  box-shadow: inset 0 0 0 1px rgba(230, 188, 108, 0.2);
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.6);
+  position: relative;
+}
+
+.theme-treasure_hunter button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('https://i.imgur.com/gqgTLVl.jpg');
+  background-size: cover;
+  opacity: 0.1;
+  mix-blend-mode: overlay;
+}
+
+.theme-treasure_hunter button:hover {
+  background-color: #5a4230;
+  transform: translateY(-2px);
+}
+
+.theme-treasure_hunter button:active {
+  transform: translateY(1px);
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+/* Sharp buttons for Dark Overlord */
+.theme-dark_overlord button {
+  background-color: #1a1a1a;
+  color: #c9c9c9;
+  border: 1px solid #530000;
+  box-shadow: 0 0 5px rgba(255, 0, 0, 0.2);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.theme-dark_overlord button:hover {
+  background-color: #2a2a2a;
+  color: #ff2222;
+  border-color: #ff2222;
+  box-shadow: 0 0 8px rgba(255, 0, 0, 0.4);
+}
+
+.theme-dark_overlord button:active {
+  background-color: #000;
+  box-shadow: inset 0 0 10px rgba(255, 0, 0, 0.3);
+}
+
+/* Card styles */
+.card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  transition: all 0.3s ease;
+}
+
+/* Terminal cursor effect */
+.terminal-cursor::after {
+  content: "█";
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.8);
+  border-left: 1px solid var(--border);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(74, 222, 128, 0.3);
+  border-radius: var(--border-radius);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(74, 222, 128, 0.5);
+}
+
+/* Glass effect for applicable themes */
+.glass-panel {
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.theme-sci_fi_command .glass-panel {
+  background-color: rgba(10, 20, 40, 0.6);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(127, 219, 255, 0.3);
+}
+
+/* Loading spinner styles adapted for each theme */
+.loading-spinner {
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid rgba(var(--primary-rgb), 0.3);
+  border-radius: 50%;
+  border-top-color: var(--primary);
+  animation: spin 1s linear infinite;
+}
+
+.theme-heroes_journey .loading-spinner {
+  border-radius: 50%;
+  border: 2px solid rgba(193, 154, 73, 0.3);
+  border-top-color: #c19a49;
+}
+
+.theme-pixel_kingdom .loading-spinner {
+  width: 20px;
+  height: 20px;
+  border-radius: 0;
+  background-color: var(--primary);
+  border: none;
+  animation: pixel-spinner 1s steps(8) infinite;
+}
+
+@keyframes pixel-spinner {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(0.8); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+.theme-sci_fi_command .loading-spinner {
+  border: 2px solid transparent;
+  border-top-color: var(--primary);
+  border-bottom-color: var(--secondary);
+  box-shadow: 0 0 15px var(--primary);
+}
+
+/* Progress bar styles */
+.progress-bar-track {
+  height: 1rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--border-radius);
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: var(--primary);
+  position: relative;
+}
+
+.theme-heroes_journey .progress-bar-track {
+  background: #e8d8b0;
+  border: 1px solid #8a5a44;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.theme-heroes_journey .progress-bar-fill {
+  background: linear-gradient(to bottom, #c19a49, #e6bc6c);
+}
+
+.theme-pixel_kingdom .progress-bar-track {
+  height: 12px;
+  border-width: 2px;
+  image-rendering: pixelated;
+}
+
+.theme-pixel_kingdom .progress-bar-fill {
+  background-color: var(--primary);
+}
+
+.theme-sci_fi_command .progress-bar-track {
+  background: rgba(10, 20, 30, 0.4);
+  border: 1px solid rgba(127, 219, 255, 0.3);
+  box-shadow: 0 0 10px rgba(127, 219, 255, 0.2);
+  height: 12px;
+}
+
+.theme-sci_fi_command .progress-bar-fill {
+  background: linear-gradient(to right, var(--primary), var(--secondary));
+  box-shadow: 0 0 8px var(--primary);
+}
+
+/* Theme-specific animations */
+@keyframes smooth-fade {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pixel-transition {
+  0% { opacity: 0; transform: scale(0.8); }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes glow-pulse {
+  0% { box-shadow: 0 0 5px var(--primary); }
+  50% { box-shadow: 0 0 15px var(--primary); }
+  100% { box-shadow: 0 0 5px var(--primary); }
+}
+
+@keyframes wave-rock {
+  0% { transform: rotate(-1deg); }
+  50% { transform: rotate(1deg); }
+  100% { transform: rotate(-1deg); }
+}
+
+@keyframes dark-pulse {
+  0% { background-color: rgba(0, 0, 0, 0.9); }
+  50% { background-color: rgba(20, 0, 0, 0.9); }
+  100% { background-color: rgba(0, 0, 0, 0.9); }
+}
+
+/* Theme-specific fonts */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Press+Start+2P&family=Orbitron:wght@400;500;700&family=Pirata+One&family=Crimson+Text:ital,wght@0,400;0,700;1,400&display=swap');
+
+/* Basic layout and responsive design */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Apply animations based on theme */
+.theme-heroes_journey .animate-entrance {
+  animation: smooth-fade 0.5s ease-out;
+}
+
+.theme-pixel_kingdom .animate-entrance {
+  animation: pixel-transition 0.3s steps(5);
+}
+
+.theme-sci_fi_command .glow-element {
+  animation: glow-pulse 2s infinite;
+}
+
+.theme-treasure_hunter .wave-element {
+  animation: wave-rock 5s infinite;
+}
+
+.theme-dark_overlord .pulse-element {
+  animation: dark-pulse 4s infinite;
 }

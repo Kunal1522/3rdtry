@@ -1,42 +1,270 @@
+/* App.css - Updated with modern UI styling */
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: left;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+/* Modern animations for UI elements */
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
   }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes spin {
   to {
     transform: rotate(360deg);
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 5px var(--primary);
+  }
+  50% {
+    box-shadow: 0 0 15px var(--primary), 0 0 30px var(--accent);
+  }
+  100% {
+    box-shadow: 0 0 5px var(--primary);
   }
 }
 
-.card {
-  padding: 2em;
+@keyframes float {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
 
-.read-the-docs {
-  color: #888;
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Common UI elements styling */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.card {
+  background-color: var(--card-bg);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1.25rem;
+  font-weight: 600;
+  border-radius: var(--border-radius);
+  background-color: var(--primary);
+  color: white;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+/* Theme-specific effects */
+.glass-effect {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.animation-fade .card,
+.animation-fade .btn,
+.animation-fade section {
+  animation: slide-in 0.5s ease forwards;
+}
+
+.animation-glow-pulse .card {
+  animation: glow 3s infinite;
+}
+
+.animation-pixel-transition .btn:hover {
+  image-rendering: pixelated;
+  transition: all 0.1s steps(5);
+}
+
+.animation-smooth-fade .card,
+.animation-smooth-fade .btn {
+  transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.animation-dark-pulse .nav-button:hover {
+  animation: glow 2s infinite;
+}
+
+.animation-wave-rock {
+  animation: float 6s infinite ease-in-out;
+}
+
+/* Custom scrollbar - Fixed for all themes including Dark Overlord */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: var(--highlight);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* Ensure scrolling works in all themes */
+html, body {
+  overflow-y: auto !important;
+  overflow-x: hidden;
+  height: 100%;
+}
+
+/* Specific fixes for Dark Overlord theme */
+.theme-dark_overlord {
+  overflow-y: auto !important;
+}
+
+.theme-dark_overlord .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #a30000;
+}
+
+.theme-dark_overlord .custom-scrollbar::-webkit-scrollbar-track {
+  background: #222222;
+}
+
+/* Theme-specific effects */
+.effect-parchment {
+  background-image: url('https://i.imgur.com/parchment-texture.jpg');
+  background-blend-mode: overlay;
+}
+
+.effect-pixelated * {
+  image-rendering: pixelated;
+}
+
+.effect-hologram::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 40%, rgba(127, 219, 255, 0.3) 45%, rgba(127, 219, 255, 0.3) 55%, transparent 60%);
+  pointer-events: none;
+  background-size: 200% 200%;
+  animation: hologram-move 5s linear infinite;
+}
+
+@keyframes hologram-move {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 200% 200%;
+  }
+}
+
+.effect-treasure-map {
+  background-image: url('https://i.imgur.com/old-paper.jpg');
+  background-blend-mode: multiply;
+}
+
+/* Fixed smoke effect to ensure it doesn't block scrolling */
+.effect-smoke {
+  position: relative;
+  overflow: visible !important;
+}
+
+.effect-smoke::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('https://i.imgur.com/smoke.png');
+  opacity: 0.05;
+  z-index: -1;
+  pointer-events: none;
+  animation: smoke 60s linear infinite;
+}
+
+@keyframes smoke {
+  0% {
+    transform: translateY(0) translateX(0);
+  }
+  100% {
+    transform: translateY(-100%) translateX(-100%);
+  }
+}
+
+/* Ensure scrollable containers in Dark Overlord theme */
+.theme-dark_overlord .tab-content {
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 0.5rem;
+  }
+  
+  .card {
+    padding: 1rem;
+  }
+  
+  .btn {
+    padding: 0.4rem 1rem;
+    font-size: 0.9rem;
+  }
 }
