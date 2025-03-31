@@ -6,6 +6,8 @@ import connectDB from "./config/db.js"; // Import MongoDB connection
 import User from "./models/User.js"; // Import User Schema
 import Problem from "./models/Problem.js"; // Import Problem Schema
 import LeaderboardEntry from "./models/LeaderboardEntry.js"; // Import LeaderboardEntry Schema
+import Quest from "./models/Quest.js"; // Import Quest Schema
+
 dotenv.config(); // Load environment variables
 connectDB(); // Connect to MongoDB
 
@@ -14,9 +16,6 @@ const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json()); // Enable JSON parsing
-
-
-
 
 app.post("/api/storeProblem", async (req, res) => {
   const { handle, problem } = req.body;
@@ -49,7 +48,6 @@ app.post("/api/storeProblem", async (req, res) => {
     res.status(500).json({ error: "Failed to store problem" });
   }
 });
-
 
 // 1️⃣ GET CODEFORCES CONTESTS
 app.get("/proxy/codeforces/getcontests", async (req, res) => {
@@ -295,6 +293,141 @@ app.get("/api/users/:handle/daily-activity", async (req, res) => {
   } catch (error) {
     console.error("Error fetching daily activity:", error);
     res.status(500).json({ error: "Failed to fetch daily activity data" });
+  }
+});
+
+// SIDE QUESTS API ENDPOINTS
+
+// Get all quests for a user
+app.get("/api/users/:handle/quests", async (req, res) => {
+  try {
+    const { handle } = req.params;
+    
+    // First find the user to make sure they exist and get their ID
+    const user = await User.findOne({ handle });
+    if (!user) return res.status(404).json({ error: "User not found" });
+    
+    // Get all quests for this user
+    const quests = await Quest.find({ userHandle: handle }).sort({ createdAt: -1 });
+    
+    res.json(quests);
+  } catch (error) {
+    console.error("Error fetching quests:", error);
+    res.status(500).json({ error: "Failed to fetch quests data" });
+  }
+});
+
+// Create a new quest
+app.post("/api/users/:handle/quests", async (req, res) => {
+  try {
+    const { handle } = req.params;
+    const { title, description, xpReward } = req.body;
+    
+    // Validate required fields
+    if (!title) {
+      return res.status(400).json({ error: "Quest title is required" });
+    }
+    
+    // First find the user to make sure they exist and get their ID
+    const user = await User.findOne({ handle });
+    if (!user) return res.status(404).json({ error: "User not found" });
+    
+    // Create new quest
+    const newQuest = new Quest({
+      title,
+      description,
+      xpReward: parseInt(xpReward) || 50,
+      userId: user._id,
+      userHandle: handle
+    });
+    
+    await newQuest.save();
+    
+    res.status(201).json(newQuest);
+  } catch (error) {
+    console.error("Error creating quest:", error);
+    res.status(500).json({ error: "Failed to create quest" });
+  }
+});
+
+// Mark a quest as completed
+app.put("/api/users/:handle/quests/:questId/complete", async (req, res) => {
+  try {
+    const { handle, questId } = req.params;
+    
+    // First find the user
+    const user = await User.findOne({ handle });
+    if (!user) return res.status(404).json({ error: "User not found" });
+    
+    // Find the quest and verify it belongs to the user
+    const quest = await Quest.findOne({ _id: questId, userHandle: handle });
+    
+    if (!quest) {
+      return res.status(404).json({ error: "Quest not found or not owned by this user" });
+    }
+    
+    // If quest is already completed, return error
+    if (quest.completed) {
+      return res.status(400).json({ error: "Quest is already completed" });
+    }
+    
+    // Mark as completed
+    quest.completed = true;
+    quest.completedAt = new Date();
+    await quest.save();
+    
+    res.json(quest);
+  } catch (error) {
+    console.error("Error completing quest:", error);
+    res.status(500).json({ error: "Failed to complete quest" });
+  }
+});
+
+// Delete a quest
+app.delete("/api/users/:handle/quests/:questId", async (req, res) => {
+  try {
+    const { handle, questId } = req.params;
+    
+    // First find the user
+    const user = await User.findOne({ handle });
+    if (!user) return res.status(404).json({ error: "User not found" });
+    
+    // Find and delete the quest only if it belongs to the user
+    const result = await Quest.findOneAndDelete({ _id: questId, userHandle: handle });
+    
+    if (!result) {
+      return res.status(404).json({ error: "Quest not found or not owned by this user" });
+    }
+    
+    res.json({ message: "Quest deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting quest:", error);
+    res.status(500).json({ error: "Failed to delete quest" });
+  }
+});
+
+// Update highest experience achieved if current experience is higher
+app.put("/api/users/:handle/update-highest-xp", async (req, res) => {
+  try {
+    const { handle } = req.params;
+    
+    const user = await User.findOne({ handle });
+    if (!user) return res.status(404).json({ error: "User not found" });
+    
+    // If current experience is higher than highest recorded, update it
+    if (user.experience > user.highestExperience) {
+      user.highestExperience = user.experience;
+      await user.save();
+    }
+    
+    res.json({
+      handle: user.handle,
+      experience: user.experience,
+      highestExperience: user.highestExperience
+    });
+  } catch (error) {
+    console.error("Error updating highest XP:", error);
+    res.status(500).json({ error: "Failed to update highest XP" });
   }
 });
 

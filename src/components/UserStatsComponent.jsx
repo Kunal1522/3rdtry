@@ -35,6 +35,43 @@ const getUserTitle = (experience) => {
   return userTier.title;
 };
 
+// Function to get next XP level and required XP
+const getNextLevelInfo = (experience) => {
+  // Find the current tier
+  const currentTier = TIERS.reduce((highest, tier) => {
+    if (experience >= tier.xp && tier.xp >= highest.xp) {
+      return tier;
+    }
+    return highest;
+  }, TIERS[0]);
+  
+  // Find the next tier
+  const currentTierIndex = TIERS.findIndex(tier => tier.xp === currentTier.xp);
+  const nextTier = TIERS[currentTierIndex + 1] || currentTier;
+  
+  // If user is at the highest tier, show 0 remaining XP
+  if (currentTier === TIERS[TIERS.length - 1] || nextTier.next === Infinity) {
+    return {
+      nextLevelXP: currentTier.xp,
+      remainingXP: 0,
+      progressPercentage: 100
+    };
+  }
+  
+  // Calculate remaining XP and progress percentage
+  const nextLevelXP = nextTier.xp;
+  const remainingXP = nextLevelXP - experience;
+  const totalLevelXP = nextLevelXP - currentTier.xp;
+  const gainedLevelXP = experience - currentTier.xp;
+  const progressPercentage = Math.floor((gainedLevelXP / totalLevelXP) * 100);
+  
+  return {
+    nextLevelXP,
+    remainingXP,
+    progressPercentage
+  };
+};
+
 const UserStatsComponent = ({ userData }) => {
   const { currentTheme } = useTheme();
   const [dailyActivity, setDailyActivity] = useState({
@@ -54,8 +91,7 @@ const UserStatsComponent = ({ userData }) => {
     const fetchDailyActivity = async () => {
       if (!userData || !userData.handle) return;
       
-      setDailyActivity(prev => ({ ...prev, loading: true }));
-      
+      setDailyActivity(prev => ({ ...prev, loading: true })); 
       try {
         const response = await axios.get(`http://localhost:5000/api/users/${userData.handle}/daily-activity`);
         
@@ -85,14 +121,13 @@ const UserStatsComponent = ({ userData }) => {
   
   if (!userData) return null;
   
-  const { handle, experience, maxExperience } = userData;
+  const { handle, experience } = userData;
   
   // Get the user's title based on their experience
   const title = getUserTitle(experience);
   
-  // Calculate progress percentage
-  const progressPercentage = Math.floor((experience / maxExperience) * 100);
-  const remainingXP = maxExperience - experience;
+  // Get next level information
+  const { nextLevelXP, remainingXP, progressPercentage } = getNextLevelInfo(experience);
   
   // Use theme-specific labels if available
   const headings = currentTheme.headings || {};
@@ -123,7 +158,7 @@ const UserStatsComponent = ({ userData }) => {
         
         <div className="xp-numbers">
           <span className="current-xp">{experience}</span>
-          <span className="max-xp">/ {maxExperience}</span>
+          <span className="max-xp">/ {nextLevelXP}</span>
         </div>
         
         <div className="progress-container">
@@ -185,14 +220,6 @@ const UserStatsComponent = ({ userData }) => {
             <div className="stat-item">
               <span className="stat-label">Problems Solved</span>
               <span className="stat-value">{dailyActivity.problemsSolved}</span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-label">XP Earned</span>
-              <span className="stat-value" style={{ 
-                color: dailyActivity.xpEarned >= 0 ? 'var(--accent)' : '#ff6b6b' 
-              }}>
-                {formattedXP}
-              </span>
             </div>
           </div>
         )}

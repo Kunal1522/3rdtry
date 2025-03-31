@@ -6,6 +6,7 @@ import { Toaster } from "react-hot-toast"
 import XPDisplay from './xpbar'
 import Leaderboard from './Leaderboard'
 import ThemeMarketplace from './ThemeMarketplace'
+import SideQuests from './SideQuests'
 import { ThemeProvider, useTheme } from './context/ThemeContext'
 import UserStatsComponent from './components/UserStatsComponent'
 import axios from 'axios'
@@ -111,6 +112,20 @@ const Layout = ({ handle }) => {
               })}
             >
               {buttonLabels.home || "Home"}
+            </NavLink>
+            <NavLink 
+              to="/side-quests" 
+              className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+              style={({ isActive }) => ({
+                backgroundColor: isActive ? currentTheme.highlightColor : 'transparent',
+                color: isActive ? currentTheme.primaryColor : currentTheme.textColor,
+                padding: '0.5rem 1rem',
+                borderRadius: currentTheme.borderRadius,
+                fontWeight: isActive ? 'bold' : 'normal',
+                transition: 'all 0.3s ease'
+              })}
+            >
+              {buttonLabels.quests || "Side Quests"}
             </NavLink>
             <NavLink 
               to="/themes-marketplace" 
@@ -335,6 +350,12 @@ const ThemesPage = () => {
   return <ThemeMarketplace handle={handle} />;
 };
 
+// Side Quests Page - wrapper for the SideQuests component
+const SideQuestsPage = () => {
+  const { handle } = useOutletContext();
+  return <SideQuests handle={handle} />;
+};
+
 // Create router with routes
 const router = createBrowserRouter([
   {
@@ -348,6 +369,10 @@ const router = createBrowserRouter([
       {
         path: "themes-marketplace",
         element: <ThemesPage />
+      },
+      {
+        path: "side-quests",
+        element: <SideQuestsPage />
       }
     ]
   }

@@ -43,41 +43,24 @@ export default function CodeforcesProblemFetcher({ handle, onFormSubmit }) {
         onChange={(e) => setLevel(e.target.value)}
         className="w-full p-2 border border-gray-600 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
-      <div className="w-full p-2 border border-gray-600 rounded bg-gray-700">
-        <p className="mb-2">How many problems solved?</p>
-        <div className="flex space-x-4">
-          {[3].map((value) => (
-            <label key={value} className="flex items-center space-x-2">
-              <input
-                type="radio"
-                value={value}
-                checked={solvedCount === value}
-                onChange={() => handleSolvedChange(value)}
-                className="form-radio text-blue-500"
-              />
-              <span>{value}</span>
-            </label>
-          ))}
-        </div>
+      
+      <div className="w-full">
+        <input
+          type="text"
+          placeholder="ContestID"
+          value={problems[0]?.contestId || ""}
+          onChange={(e) => handleProblemChange(0, "contestId", e.target.value)}
+          className="w-full p-2 border border-gray-600 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2"
+        />
+        <input
+          type="text"
+          placeholder="Problem Index (e.g., A, B, C)"
+          value={problems[0]?.problemIndex || ""}
+          onChange={(e) => handleProblemChange(0, "problemIndex", e.target.value)}
+          className="w-full p-2 border border-gray-600 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
       </div>
-      {problems.map((problem, index) => (
-        <div key={index} className="w-full">
-          <input
-            type="text"
-            placeholder="Contest ID"
-            value={problem.contestId}
-            onChange={(e) => handleProblemChange(index, "contestId", e.target.value)}
-            className="w-full p-2 border border-gray-600 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2"
-          />
-          <input
-            type="text"
-            placeholder="Problem Index (e.g., A, B, C)"
-            value={problem.problemIndex}
-            onChange={(e) => handleProblemChange(index, "problemIndex", e.target.value)}
-            className="w-full p-2 border border-gray-600 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-      ))}
+      
       <button 
         onClick={handleSubmit} 
         className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600"

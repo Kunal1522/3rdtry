@@ -3,9 +3,11 @@ import axios from "axios";
 import { toast } from "react-hot-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import { experienceFinder } from "../utils/experiencefinder";
+import { useTheme } from "./context/ThemeContext";
 
 // Confirmation Dialog Component for Mark as Solved
 const SolveConfirmationDialog = ({ isOpen, onClose, onConfirm }) => {
+  const { currentTheme } = useTheme();
   const [step, setStep] = useState(1);
   const [xpDeduction, setXpDeduction] = useState(0);
   const [learningNotes, setLearningNotes] = useState("");
@@ -64,39 +66,64 @@ const SolveConfirmationDialog = ({ isOpen, onClose, onConfirm }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/90"
+      className="fixed inset-0 z-50 flex items-center justify-center"
+      style={{ backgroundColor: "rgba(0, 0, 0, 0.8)" }}
     >
       <motion.div
         initial={{ scale: 0.9, y: 20 }}
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.9, y: 20 }}
-        className="max-w-md mx-auto border border-green-500/30 p-6 bg-black relative font-mono"
+        className="max-w-md mx-auto p-6 relative"
+        style={{ 
+          backgroundColor: currentTheme.cardBgColor,
+          borderRadius: currentTheme.borderRadius,
+          border: `1px solid ${currentTheme.borderColor}`,
+          boxShadow: currentTheme.boxShadow,
+          color: currentTheme.textColor,
+          fontFamily: currentTheme.fontFamily
+        }}
       >
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 text-green-500 hover:text-green-300 bg-transparent border-none p-1"
+          className="absolute top-3 right-3 bg-transparent border-none p-1"
+          style={{ color: currentTheme.primaryColor }}
         >
           x
         </button>
         
-        <h2 className="text-lg font-bold mb-4 text-green-400 text-center border-b border-green-500/30 pb-2">
+        <h2 className="text-lg font-bold mb-4 text-center pb-2" style={{ 
+          color: currentTheme.primaryColor,
+          borderBottom: `1px solid ${currentTheme.borderColor}`
+        }}>
           $ problem_verification.sh
         </h2>
         
         <div className="space-y-6">
           {step === 1 && (
             <div className="space-y-4">
-              <p className="text-green-400">$ echo "Did you give 100% effort and solve this problem completely by yourself?"</p>
+              <p style={{ color: currentTheme.textColor }}>$ echo "Did you give 100% effort and solve this problem completely by yourself?"</p>
               <div className="flex justify-center gap-4">
                 <button
                   onClick={() => handleFirstQuestion(true)}
-                  className="px-4 py-2 border border-green-500/50 text-green-400 hover:bg-green-900/20"
+                  className="px-4 py-2"
+                  style={{ 
+                    backgroundColor: currentTheme.highlightColor,
+                    color: currentTheme.primaryColor,
+                    border: `1px solid ${currentTheme.borderColor}`,
+                    borderRadius: currentTheme.borderRadius
+                  }}
                 >
                   $ Yes ✅
                 </button>
                 <button
                   onClick={() => handleFirstQuestion(false)}
-                  className="px-4 py-2 border border-red-500/50 text-red-400 hover:bg-red-900/20"
+                  className="px-4 py-2"
+                  style={{ 
+                    backgroundColor: currentTheme.highlightColor,
+                    color: "#ff6b6b", // Keep red for "No" regardless of theme
+                    border: `1px solid ${currentTheme.borderColor}`,
+                    borderRadius: currentTheme.borderRadius
+                  }}
                 >
                   $ No ❌
                 </button>
@@ -106,17 +133,29 @@ const SolveConfirmationDialog = ({ isOpen, onClose, onConfirm }) => {
           
           {step === 2 && (
             <div className="space-y-4">
-              <p className="text-green-400">$ echo "Did you try your best to implement it and successfully get it working?"</p>
+              <p style={{ color: currentTheme.textColor }}>$ echo "Did you try your best to implement it and successfully get it working?"</p>
               <div className="flex justify-center gap-4">
                 <button
                   onClick={() => handleSecondQuestion(true)}
-                  className="px-4 py-2 border border-green-500/50 text-green-400 hover:bg-green-900/20"
+                  className="px-4 py-2"
+                  style={{ 
+                    backgroundColor: currentTheme.highlightColor,
+                    color: currentTheme.primaryColor,
+                    border: `1px solid ${currentTheme.borderColor}`,
+                    borderRadius: currentTheme.borderRadius
+                  }}
                 >
                   $ Yes ✅
                 </button>
                 <button
                   onClick={() => handleSecondQuestion(false)}
-                  className="px-4 py-2 border border-red-500/50 text-red-400 hover:bg-red-900/20"
+                  className="px-4 py-2"
+                  style={{ 
+                    backgroundColor: currentTheme.highlightColor,
+                    color: "#ff6b6b", // Keep red for "No" regardless of theme
+                    border: `1px solid ${currentTheme.borderColor}`,
+                    borderRadius: currentTheme.borderRadius
+                  }}
                 >
                   $ No ❌
                 </button>
@@ -126,17 +165,29 @@ const SolveConfirmationDialog = ({ isOpen, onClose, onConfirm }) => {
           
           {step === 3 && (
             <div className="space-y-4">
-              <p className="text-green-400">$ echo "Did you check the editorial (if available)?"</p>
+              <p style={{ color: currentTheme.textColor }}>$ echo "Did you check the editorial (if available)?"</p>
               <div className="flex justify-center gap-4">
                 <button
                   onClick={() => handleThirdQuestion(true)}
-                  className="px-4 py-2 border border-green-500/50 text-green-400 hover:bg-green-900/20"
+                  className="px-4 py-2"
+                  style={{ 
+                    backgroundColor: currentTheme.highlightColor,
+                    color: currentTheme.primaryColor,
+                    border: `1px solid ${currentTheme.borderColor}`,
+                    borderRadius: currentTheme.borderRadius
+                  }}
                 >
                   $ Yes ✅
                 </button>
                 <button
                   onClick={() => handleThirdQuestion(false)}
-                  className="px-4 py-2 border border-red-500/50 text-red-400 hover:bg-red-900/20"
+                  className="px-4 py-2"
+                  style={{ 
+                    backgroundColor: currentTheme.highlightColor,
+                    color: "#ff6b6b", // Keep red for "No" regardless of theme
+                    border: `1px solid ${currentTheme.borderColor}`,
+                    borderRadius: currentTheme.borderRadius
+                  }}
                 >
                   $ No ❌
                 </button>
@@ -146,18 +197,32 @@ const SolveConfirmationDialog = ({ isOpen, onClose, onConfirm }) => {
           
           {step === 4 && (
             <div className="space-y-4">
-              <p className="text-green-400">$ echo "What idea or proof did you learn from it?"</p>
+              <p style={{ color: currentTheme.textColor }}>$ echo "What idea or proof did you learn from it?"</p>
               <textarea
                 value={learningNotes}
                 onChange={(e) => setLearningNotes(e.target.value)}
-                className="w-full p-2 bg-black border border-green-500/30 text-green-400 font-mono min-h-[100px] focus:outline-none focus:border-green-500"
+                className="w-full p-2 min-h-[100px] focus:outline-none"
                 placeholder="Type your learnings here... (at least 10 characters)"
+                style={{ 
+                  backgroundColor: currentTheme.backgroundColor,
+                  color: currentTheme.textColor,
+                  border: `1px solid ${currentTheme.borderColor}`,
+                  borderRadius: currentTheme.borderRadius,
+                  fontFamily: currentTheme.fontFamily
+                }}
               />
               <div className="flex justify-center">
                 <button
                   onClick={handleSubmitLearning}
-                  className="px-4 py-2 border border-green-500/50 text-green-400 hover:bg-green-900/20"
+                  className="px-4 py-2"
                   disabled={learningNotes.trim().length < 10}
+                  style={{ 
+                    backgroundColor: currentTheme.highlightColor,
+                    color: currentTheme.primaryColor,
+                    border: `1px solid ${currentTheme.borderColor}`,
+                    borderRadius: currentTheme.borderRadius,
+                    opacity: learningNotes.trim().length < 10 ? 0.5 : 1
+                  }}
                 >
                   $ submit_learning
                 </button>
@@ -166,7 +231,7 @@ const SolveConfirmationDialog = ({ isOpen, onClose, onConfirm }) => {
           )}
           
           {xpDeduction > 0 && (
-            <div className="text-yellow-400 text-center text-sm">
+            <div className="text-center text-sm" style={{ color: currentTheme.accentColor }}>
               $ echo "Note: {xpDeduction}% XP deduction will be applied"
             </div>
           )}
@@ -178,6 +243,7 @@ const SolveConfirmationDialog = ({ isOpen, onClose, onConfirm }) => {
 
 // Dialog Component for Theme CP
 const ThemeCpDialog = ({ isOpen, onClose, handle, onFormSubmit }) => {
+  const { currentTheme } = useTheme();
   const [level, setLevel] = useState("");
   const [solvedCount, setSolvedCount] = useState(1);
   const [problems, setProblems] = useState([]);
@@ -217,40 +283,64 @@ const ThemeCpDialog = ({ isOpen, onClose, handle, onFormSubmit }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/90"
+      className="fixed inset-0 z-50 flex items-center justify-center"
+      style={{ backgroundColor: "rgba(0, 0, 0, 0.8)" }}
     >
       <motion.div 
         initial={{ scale: 0.9, y: 20 }}
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.9, y: 20 }}
-        className="max-w-md mx-auto border border-green-500/30 p-6 bg-black relative font-mono"
+        className="max-w-md mx-auto p-6 relative"
+        style={{ 
+          backgroundColor: currentTheme.cardBgColor,
+          borderRadius: currentTheme.borderRadius,
+          border: `1px solid ${currentTheme.borderColor}`,
+          boxShadow: currentTheme.boxShadow,
+          color: currentTheme.textColor,
+          fontFamily: currentTheme.fontFamily
+        }}
       >
         <button 
           onClick={onClose}
-          className="absolute top-3 right-3 text-green-500 hover:text-green-300 bg-transparent border-none p-1"
+          className="absolute top-3 right-3 bg-transparent border-none p-1"
+          style={{ color: currentTheme.primaryColor }}
         >
           x
         </button>
         
-        <h2 className="text-lg font-bold mb-4 text-green-400 text-center border-b border-green-500/30 pb-2">
+        <h2 className="text-lg font-bold mb-4 text-center pb-2" style={{ 
+          color: currentTheme.primaryColor,
+          borderBottom: `1px solid ${currentTheme.borderColor}`
+        }}>
           $ add_theme_cp_problem.sh
         </h2>
         
         <div className="space-y-4">
           <div>
-            <label className="block text-sm text-green-400 mb-1">$ echo "Enter level:"</label>
+            <label className="block text-sm mb-1" style={{ color: currentTheme.textColor }}>$ echo "Enter level:"</label>
             <input
               type="text"
               placeholder="Which level?"
               value={level}
               onChange={(e) => setLevel(e.target.value)}
-              className="w-full p-2 border border-green-500/30 bg-black text-green-400 focus:outline-none focus:border-green-500"
+              className="w-full p-2 focus:outline-none"
+              style={{ 
+                backgroundColor: currentTheme.backgroundColor,
+                color: currentTheme.textColor,
+                border: `1px solid ${currentTheme.borderColor}`,
+                borderRadius: currentTheme.borderRadius,
+                fontFamily: currentTheme.fontFamily
+              }}
             />
           </div>
           
           <div>
-            <label className="block text-sm text-green-400 mb-1">$ echo "Problems solved:"</label>
-            <div className="flex space-x-4 p-2 border border-green-500/30 bg-black">
+            <label className="block text-sm mb-1" style={{ color: currentTheme.textColor }}>$ echo "Problems solved:"</label>
+            <div className="flex space-x-4 p-2" style={{
+              border: `1px solid ${currentTheme.borderColor}`,
+              borderRadius: currentTheme.borderRadius,
+              backgroundColor: currentTheme.backgroundColor
+            }}>
               <div className="flex space-x-4 mx-auto">
                 {[1, 2, 3].map((value) => (
                   <label key={value} className="flex items-center space-x-2 cursor-pointer">
@@ -259,9 +349,10 @@ const ThemeCpDialog = ({ isOpen, onClose, handle, onFormSubmit }) => {
                       value={value}
                       checked={solvedCount === value}
                       onChange={() => handleSolvedChange(value)}
-                      className="form-radio text-green-500"
+                      className="form-radio"
+                      style={{ accentColor: currentTheme.primaryColor }}
                     />
-                    <span className="text-green-400">{value}</span>
+                    <span style={{ color: currentTheme.textColor }}>{value}</span>
                   </label>
                 ))}
               </div>
@@ -279,20 +370,34 @@ const ThemeCpDialog = ({ isOpen, onClose, handle, onFormSubmit }) => {
                 className="space-y-2"
               >
                 <div>
-                  <label className="block text-sm text-green-400 mb-1">$ echo "Problem {index + 1}:"</label>
+                  <label className="block text-sm mb-1" style={{ color: currentTheme.textColor }}>$ echo "Problem {index + 1}:"</label>
                   <input
                     type="text"
                     placeholder="Contest ID"
                     value={problem.contestId}
                     onChange={(e) => handleProblemChange(index, "contestId", e.target.value)}
-                    className="w-full p-2 border border-green-500/30 bg-black text-green-400 focus:outline-none focus:border-green-500 mb-2"
+                    className="w-full p-2 focus:outline-none mb-2"
+                    style={{ 
+                      backgroundColor: currentTheme.backgroundColor,
+                      color: currentTheme.textColor,
+                      border: `1px solid ${currentTheme.borderColor}`,
+                      borderRadius: currentTheme.borderRadius,
+                      fontFamily: currentTheme.fontFamily
+                    }}
                   />
                   <input
                     type="text"
                     placeholder="Problem Index (e.g., A, B, C)"
                     value={problem.problemIndex}
                     onChange={(e) => handleProblemChange(index, "problemIndex", e.target.value)}
-                    className="w-full p-2 border border-green-500/30 bg-black text-green-400 focus:outline-none focus:border-green-500"
+                    className="w-full p-2 focus:outline-none"
+                    style={{ 
+                      backgroundColor: currentTheme.backgroundColor,
+                      color: currentTheme.textColor,
+                      border: `1px solid ${currentTheme.borderColor}`,
+                      borderRadius: currentTheme.borderRadius,
+                      fontFamily: currentTheme.fontFamily
+                    }}
                   />
                 </div>
               </motion.div>
@@ -301,7 +406,13 @@ const ThemeCpDialog = ({ isOpen, onClose, handle, onFormSubmit }) => {
           
           <button 
             onClick={handleSubmit} 
-            className="w-full p-2 border border-green-500/50 bg-black text-green-500 hover:bg-green-900/20 transition-all duration-300"
+            className="w-full p-2 transition-all duration-300"
+            style={{ 
+              backgroundColor: currentTheme.highlightColor,
+              color: currentTheme.primaryColor,
+              border: `1px solid ${currentTheme.borderColor}`,
+              borderRadius: currentTheme.borderRadius
+            }}
           >
             $ submit
           </button>
@@ -312,7 +423,8 @@ const ThemeCpDialog = ({ isOpen, onClose, handle, onFormSubmit }) => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="text-green-400 font-bold text-center"
+                className="font-bold text-center"
+                style={{ color: currentTheme.primaryColor }}
               >
                 $ echo "Theme CP problem added successfully!"
               </motion.p>
@@ -326,58 +438,76 @@ const ThemeCpDialog = ({ isOpen, onClose, handle, onFormSubmit }) => {
 
 // Problem Card Component
 const ProblemCard = ({ problem, onMarkSolved, loading }) => {
+  const { currentTheme } = useTheme();
+  
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="border border-green-500/30 p-4 bg-black"
+      className="p-4"
+      style={{ 
+        backgroundColor: currentTheme.cardBgColor,
+        borderRadius: currentTheme.borderRadius,
+        border: `1px solid ${currentTheme.borderColor}`,
+        boxShadow: currentTheme.boxShadow
+      }}
     >
-      <div className="font-mono">
-        <div className="mb-3 border-b border-green-500/30 pb-2">
-          <span className="text-green-700">contest_id:</span> 
-          <span className="text-green-400 ml-2">{problem.contestId}</span>
+      <div style={{ fontFamily: currentTheme.fontFamily }}>
+        <div className="mb-3 pb-2" style={{ borderBottom: `1px solid ${currentTheme.borderColor}` }}>
+          <span style={{ color: currentTheme.accentColor }}>Contest Id:</span> 
+          <span className="ml-2" style={{ color: currentTheme.textColor }}>{problem.contestId}</span>
         </div>
         
         <div className="mb-4">
-          <h3 className="text-lg font-bold text-green-500">
+          <h3 className="text-lg font-bold" style={{ color: currentTheme.primaryColor }}>
             {problem.index}: {problem.name}
           </h3>
         </div>
         
-        <div className="text-xs mb-3">
-          <span className="text-green-700">$ cat tags.txt</span>
-          <div className="mt-1 flex flex-wrap gap-2">
-            {problem.tags && problem.tags.map((tag, i) => (
-              <span key={i} className="px-2 py-1 border border-green-500/30 text-green-400">
-                {tag}
-              </span>
-            ))}
-          </div>
-        </div>
+   
         
         <div className="flex flex-col sm:flex-row gap-3 mt-4">
           <a
             href={`https://codeforces.com/contest/${problem.contestId}/problem/${problem.index}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 px-4 py-2 border border-green-500/50 text-green-400 text-center hover:bg-green-900/20 transition-colors duration-300"
+            className="flex-1 px-4 py-2 text-center transition-colors duration-300"
+            style={{ 
+              border: `1px solid ${currentTheme.borderColor}`,
+              color: currentTheme.textColor,
+              borderRadius: currentTheme.borderRadius
+            }}
           >
-            $ open_problem
+            Open Problem
           </a>
           
           <button
             onClick={onMarkSolved}
             disabled={loading}
-            className="flex-1 px-4 py-2 border border-green-500/50 text-green-400 hover:bg-green-900/20 transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 px-4 py-2 transition-colors duration-300"
+            style={{ 
+              border: `1px solid ${currentTheme.borderColor}`,
+              color: currentTheme.textColor,
+              borderRadius: currentTheme.borderRadius,
+              backgroundColor: currentTheme.highlightColor,
+              opacity: loading ? 0.5 : 1
+            }}
           >
             {loading ? (
               <span className="flex items-center justify-center">
-                <div className="loading-spinner mr-2"></div>
+                <div className="loading-spinner mr-2" style={{
+                  width: '1rem',
+                  height: '1rem',
+                  borderRadius: '50%',
+                  border: `2px solid ${currentTheme.borderColor}`,
+                  borderTopColor: currentTheme.primaryColor,
+                  animation: 'spin 1s linear infinite'
+                }}></div>
                 $ verifying...
               </span>
             ) : (
-              "$ mark_solved"
+              "Mark Solved"
             )}
           </button>
         </div>
@@ -387,6 +517,7 @@ const ProblemCard = ({ problem, onMarkSolved, loading }) => {
 };
 
 const FetchCodeforces = ({ handle }) => {
+  const { currentTheme } = useTheme();
   const [problem, setProblem] = useState(null);
   const [loading, setLoading] = useState(true);
   const [themeCpProblems, setThemeCpProblems] = useState([]);
@@ -396,6 +527,9 @@ const FetchCodeforces = ({ handle }) => {
   const [isThemeCpDialogOpen, setIsThemeCpDialogOpen] = useState(false);
   const [isSolveConfirmationOpen, setIsSolveConfirmationOpen] = useState(false);
   const [markingSolved, setMarkingSolved] = useState(false);
+  
+  // Second handle for checking submissions
+  const altHandle = "Kunal_Kashyap";
   
   const divProblemMap = {
     2: ["C", "C1", "D"],
@@ -450,10 +584,21 @@ const FetchCodeforces = ({ handle }) => {
         problemIndices.includes(p.index)
       );
   
-      const submissionsRes = await axios.get(`http://localhost:5000/proxy/codeforces/getSubmissions?handle=${handle}`);
-      const submissions = submissionsRes.data.result;
+      // Fetch both handles' submissions
+      const mainSubmissionsRes = await axios.get(`http://localhost:5000/proxy/codeforces/getSubmissions?handle=${handle}`);
+      const altSubmissionsRes = await axios.get(`http://localhost:5000/proxy/codeforces/getSubmissions?handle=${altHandle}`);
+      
+      const mainSubmissions = mainSubmissionsRes.data.result || [];
+      const altSubmissions = altSubmissionsRes.data.result || [];
+      
+      // Combine both submissions
+      const allSubmissions = [...mainSubmissions, ...altSubmissions];
+      
+      // Create a set of solved problems from both handles
       const solvedSet = new Set(
-        submissions.filter((s) => s.verdict === "OK").map((s) => `${s.contestId}-${s.problem.index}`)
+        allSubmissions
+          .filter((s) => s.verdict === "OK")
+          .map((s) => `${s.contestId}-${s.problem.index}`)
       );
   
       const firstUnsolved = filteredProblems.find((p) => !solvedSet.has(`${p.contestId}-${p.index}`));
@@ -555,14 +700,27 @@ const FetchCodeforces = ({ handle }) => {
     setIsSolveConfirmationOpen(false);
     
     try {
-      const submissionsRes = await axios.get(`http://localhost:5000/proxy/codeforces/getSubmissions?handle=${handle}`);
-      const submissions = submissionsRes.data.result;
+      // Fetch both handles' submissions
+      const mainSubmissionsRes = await axios.get(`http://localhost:5000/proxy/codeforces/getSubmissions?handle=${handle}`);
+      const altSubmissionsRes = await axios.get(`http://localhost:5000/proxy/codeforces/getSubmissions?handle=${altHandle}`);
+      
+      const mainSubmissions = mainSubmissionsRes.data.result || [];
+      const altSubmissions = altSubmissionsRes.data.result || [];
+      
+      // Combine both submissions
+      const allSubmissions = [...mainSubmissions, ...altSubmissions];
+      
+      // Create a set of solved problems from both handles
       const solvedSet = new Set(
-        submissions.filter((s) => s.verdict === "OK").map((s) => `${s.contestId}-${s.problem.index}`)
-      );   
+        allSubmissions
+          .filter((s) => s.verdict === "OK")
+          .map((s) => `${s.contestId}-${s.problem.index}`)
+      );
+         
       const problemKey = `${problem.contestId}-${problem.index}`;
       
-      if (1) {
+      // Check if either handle has solved the problem
+      if (solvedSet.has(problemKey)) {
         await axios.delete(`http://localhost:5000/api/deleteProblem`, {
           data: { handle: handle, problemId: problem._id },
         });
@@ -624,33 +782,58 @@ const FetchCodeforces = ({ handle }) => {
   }, [normalProblems]);
   
   return (
-    <div className="flex flex-col space-y-4 font-mono">
-      <div className="flex flex-col md:flex-row justify-between items-center gap-4 pb-2 border-b border-green-500/30">
-        <p className="text-sm text-green-400">
-          <span className="text-green-700">$</span> ./find_next_problem.sh --handle={handle}
+    <div className="flex flex-col space-y-4" style={{ fontFamily: currentTheme.fontFamily }}>
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4 pb-2" style={{ borderBottom: `1px solid ${currentTheme.borderColor}` }}>
+        <p className="text-sm" style={{ color: currentTheme.textColor }}>
+    Next Problem to Solve Kunal
         </p>
         
         <button 
           onClick={() => setIsThemeCpDialogOpen(true)}
-          className="px-3 py-1 border border-green-500/30 text-green-400 hover:bg-green-900/20 text-sm"
+          className="px-3 py-1 text-sm"
+          style={{ 
+            border: `1px solid ${currentTheme.borderColor}`,
+            color: currentTheme.textColor,
+            backgroundColor: currentTheme.highlightColor,
+            borderRadius: currentTheme.borderRadius
+          }}
         >
-          $ add_theme_cp_problem
+        Add a Problem
+
         </button>
       </div>
       
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-6 text-green-400">
-          <div className="loading-spinner mb-3"></div>
+        <div className="flex flex-col items-center justify-center py-6" style={{ color: currentTheme.textColor }}>
+          <div className="loading-spinner mb-3" style={{
+            width: '2rem',
+            height: '2rem',
+            borderRadius: '50%',
+            border: `2px solid ${currentTheme.borderColor}`,
+            borderTopColor: currentTheme.primaryColor,
+            animation: 'spin 1s linear infinite'
+          }}></div>
           <p>$ Finding optimal problem... <span className="animate-pulse">_</span></p>
         </div>
       ) : problem ? (
         <ProblemCard problem={problem} onMarkSolved={initiateMarkAsSolved} loading={markingSolved} />
       ) : (
-        <div className="border border-green-500/30 p-4 text-center">
-          <p className="text-green-400 mb-3">$ echo "No unsolved problems found."</p>
+        <div className="p-4 text-center" style={{
+          border: `1px solid ${currentTheme.borderColor}`,
+          backgroundColor: currentTheme.cardBgColor,
+          borderRadius: currentTheme.borderRadius,
+          color: currentTheme.textColor
+        }}>
+          <p className="mb-3">$ echo "No unsolved problems found."</p>
           <button 
             onClick={fetchContests}
-            className="px-4 py-2 border border-green-500/30 text-green-400 hover:bg-green-900/20"
+            className="px-4 py-2"
+            style={{ 
+              border: `1px solid ${currentTheme.borderColor}`,
+              color: currentTheme.textColor,
+              backgroundColor: currentTheme.highlightColor,
+              borderRadius: currentTheme.borderRadius
+            }}
           >
             $ ./refresh.sh
           </button>
