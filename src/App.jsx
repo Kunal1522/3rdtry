@@ -10,6 +10,7 @@ import SideQuests from './SideQuests'
 import { ThemeProvider, useTheme } from './context/ThemeContext'
 import UserStatsComponent from './components/UserStatsComponent'
 import axios from 'axios'
+import API_BASE_URL from './config'
 
 // Layout Component with modern UI header and footer
 const Layout = ({ handle }) => {
@@ -37,7 +38,7 @@ const Layout = ({ handle }) => {
     
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/users/${handle}`)
+        const response = await axios.get(`${API_BASE_URL}/api/users/${handle}`)
         setUserData(response.data)
       } catch (error) {
         console.error("Failed to fetch user data:", error)

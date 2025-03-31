@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
+import API_BASE_URL from '../config';
 
 // Define the default theme (modern style as base, no terminal elements)
 const defaultTheme = {
@@ -370,7 +371,6 @@ const THEMES = themes.reduce((acc, theme) => {
 
 // Create the context
 const ThemeContext = createContext();
-
 // Create a provider component
 export const ThemeProvider = ({ children, handle }) => {
   // Load the active theme from local storage or use default
@@ -398,7 +398,7 @@ export const ThemeProvider = ({ children, handle }) => {
     const fetchUserData = async () => {
       try {
         setLoadingXP(true);
-        const response = await axios.get(`http://localhost:5000/api/users/${handle}`);
+        const response = await axios.get(`${API_BASE_URL}/api/users/${handle}`);
         setUserXP(response.data.experience || 0);
       } catch (error) {
         console.error('Failed to fetch user XP:', error);
@@ -525,7 +525,7 @@ export const ThemeProvider = ({ children, handle }) => {
     
     try {
       // Deduct XP
-      const response = await axios.put(`http://localhost:5000/api/users/${handle}/update`, {
+      const response = await axios.put(`${API_BASE_URL}/api/users/${handle}/update`, {
         experience: -theme.cost
       });
       
@@ -558,33 +558,35 @@ export const ThemeProvider = ({ children, handle }) => {
     
     // Check if this is a non-default theme that has a switch cost
     if (themeId !== 'default' && ownedThemes.includes(themeId)) {
-      const switchCost = Math.floor(theme.cost * 0.1); // 10% of original cost
-      
+      const switchCost = Math.floor(theme.cost * 0.1); // 10% of original cost  
       if (userXP < switchCost) {
         return { success: false, message: 'Not enough XP to switch to this theme' };
       }
       
       try {
         // Deduct the switching fee
-        await axios.put(`http://localhost:5000/api/users/${handle}/update`, {
+        await axios.put(`${API_BASE_URL}/api/users/${handle}/update`, {
           experience: -switchCost
         });
         
-        // Update local XP
+        // Update local state
         setUserXP(prev => prev - switchCost);
+        setCurrentTheme(theme);
+        
+        return { 
+          success: true, 
+          message: `Theme switched successfully! (Cost: ${switchCost} XP)`,
+          newXP: userXP - switchCost
+        };
       } catch (error) {
-        console.error('Error deducting switch cost:', error);
+        console.error('Error switching theme:', error);
         return { success: false, message: 'Failed to switch theme. Please try again.' };
       }
+    } else {
+      // For the default theme or free switching
+      setCurrentTheme(theme);
+      return { success: true, message: 'Theme switched successfully!' };
     }
-    
-    // Apply the theme
-    setCurrentTheme(theme);
-    
-    return { 
-      success: true, 
-      message: `Successfully switched to ${theme.name} theme!`
-    };
   };
   
   return (

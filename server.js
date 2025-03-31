@@ -8,14 +8,21 @@ import Problem from "./models/Problem.js"; // Import Problem Schema
 import LeaderboardEntry from "./models/LeaderboardEntry.js"; // Import LeaderboardEntry Schema
 import Quest from "./models/Quest.js"; // Import Quest Schema
 
-dotenv.config(); // Load environment variables
-connectDB(); // Connect to MongoDB
+// Load environment variables
+dotenv.config(); 
+
+// Connect to MongoDB
+connectDB(); 
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const WEBSITE_URL = process.env.WEBSITE_URL || 'http://localhost:5000';
 
 app.use(cors());
 app.use(express.json()); // Enable JSON parsing
+
+// Log server info on startup
+console.log(`🌐 API Base URL: ${WEBSITE_URL}`);
 
 app.post("/api/storeProblem", async (req, res) => {
   const { handle, problem } = req.body;

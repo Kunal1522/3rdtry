@@ -4,6 +4,7 @@ import { toast } from "react-hot-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import { experienceFinder } from "../utils/experiencefinder";
 import { useTheme } from "./context/ThemeContext";
+import API_BASE_URL from "./config";
 
 // Confirmation Dialog Component for Mark as Solved
 const SolveConfirmationDialog = ({ isOpen, onClose, onConfirm }) => {
@@ -40,7 +41,7 @@ const SolveConfirmationDialog = ({ isOpen, onClose, onConfirm }) => {
   
   const handleSubmitLearning = () => {
     if (learningNotes.trim().length < 10) {
-      toast.error("$ error: Please provide a meaningful description of what you learned");
+      toast.error(": Please provide a meaningful description of what you learned");
       return;
     }
     setXpDeduction(60);
@@ -101,7 +102,7 @@ const SolveConfirmationDialog = ({ isOpen, onClose, onConfirm }) => {
         <div className="space-y-6">
           {step === 1 && (
             <div className="space-y-4">
-              <p style={{ color: currentTheme.textColor }}>$ echo "Did you give 100% effort and solve this problem completely by yourself?"</p>
+              <p style={{ color: currentTheme.textColor }}> "Did you give 100% effort and solve this problem completely by yourself?"</p>
               <div className="flex justify-center gap-4">
                 <button
                   onClick={() => handleFirstQuestion(true)}
@@ -113,7 +114,7 @@ const SolveConfirmationDialog = ({ isOpen, onClose, onConfirm }) => {
                     borderRadius: currentTheme.borderRadius
                   }}
                 >
-                  $ Yes ✅
+                 Yes ✅
                 </button>
                 <button
                   onClick={() => handleFirstQuestion(false)}
@@ -125,7 +126,7 @@ const SolveConfirmationDialog = ({ isOpen, onClose, onConfirm }) => {
                     borderRadius: currentTheme.borderRadius
                   }}
                 >
-                  $ No ❌
+                   No ❌
                 </button>
               </div>
             </div>
@@ -133,7 +134,7 @@ const SolveConfirmationDialog = ({ isOpen, onClose, onConfirm }) => {
           
           {step === 2 && (
             <div className="space-y-4">
-              <p style={{ color: currentTheme.textColor }}>$ echo "Did you try your best to implement it and successfully get it working?"</p>
+              <p style={{ color: currentTheme.textColor }}>"Did you try your best to implement it and successfully get it working?"</p>
               <div className="flex justify-center gap-4">
                 <button
                   onClick={() => handleSecondQuestion(true)}
@@ -145,7 +146,7 @@ const SolveConfirmationDialog = ({ isOpen, onClose, onConfirm }) => {
                     borderRadius: currentTheme.borderRadius
                   }}
                 >
-                  $ Yes ✅
+                   Yes ✅
                 </button>
                 <button
                   onClick={() => handleSecondQuestion(false)}
@@ -157,7 +158,7 @@ const SolveConfirmationDialog = ({ isOpen, onClose, onConfirm }) => {
                     borderRadius: currentTheme.borderRadius
                   }}
                 >
-                  $ No ❌
+                   No ❌
                 </button>
               </div>
             </div>
@@ -165,7 +166,7 @@ const SolveConfirmationDialog = ({ isOpen, onClose, onConfirm }) => {
           
           {step === 3 && (
             <div className="space-y-4">
-              <p style={{ color: currentTheme.textColor }}>$ echo "Did you check the editorial (if available)?"</p>
+              <p style={{ color: currentTheme.textColor }}>"Did you check the editorial (if available)?"</p>
               <div className="flex justify-center gap-4">
                 <button
                   onClick={() => handleThirdQuestion(true)}
@@ -177,7 +178,7 @@ const SolveConfirmationDialog = ({ isOpen, onClose, onConfirm }) => {
                     borderRadius: currentTheme.borderRadius
                   }}
                 >
-                  $ Yes ✅
+                   Yes ✅
                 </button>
                 <button
                   onClick={() => handleThirdQuestion(false)}
@@ -189,7 +190,7 @@ const SolveConfirmationDialog = ({ isOpen, onClose, onConfirm }) => {
                     borderRadius: currentTheme.borderRadius
                   }}
                 >
-                  $ No ❌
+                   No ❌
                 </button>
               </div>
             </div>
@@ -197,7 +198,7 @@ const SolveConfirmationDialog = ({ isOpen, onClose, onConfirm }) => {
           
           {step === 4 && (
             <div className="space-y-4">
-              <p style={{ color: currentTheme.textColor }}>$ echo "What idea or proof did you learn from it?"</p>
+              <p style={{ color: currentTheme.textColor }}> "What idea or proof did you learn from it?"</p>
               <textarea
                 value={learningNotes}
                 onChange={(e) => setLearningNotes(e.target.value)}
@@ -224,7 +225,7 @@ const SolveConfirmationDialog = ({ isOpen, onClose, onConfirm }) => {
                     opacity: learningNotes.trim().length < 10 ? 0.5 : 1
                   }}
                 >
-                  $ submit_learning
+                  Submit Learning
                 </button>
               </div>
             </div>
@@ -232,7 +233,7 @@ const SolveConfirmationDialog = ({ isOpen, onClose, onConfirm }) => {
           
           {xpDeduction > 0 && (
             <div className="text-center text-sm" style={{ color: currentTheme.accentColor }}>
-              $ echo "Note: {xpDeduction}% XP deduction will be applied"
+               "Note: {xpDeduction}% XP deduction will be applied"
             </div>
           )}
         </div>
@@ -312,12 +313,12 @@ const ThemeCpDialog = ({ isOpen, onClose, handle, onFormSubmit }) => {
           color: currentTheme.primaryColor,
           borderBottom: `1px solid ${currentTheme.borderColor}`
         }}>
-          $ add_theme_cp_problem.sh
+        Add a Problem
         </h2>
         
         <div className="space-y-4">
           <div>
-            <label className="block text-sm mb-1" style={{ color: currentTheme.textColor }}>$ echo "Enter level:"</label>
+            <label className="block text-sm mb-1" style={{ color: currentTheme.textColor }}> "Enter level:"</label>
             <input
               type="text"
               placeholder="Which level?"
@@ -335,7 +336,7 @@ const ThemeCpDialog = ({ isOpen, onClose, handle, onFormSubmit }) => {
           </div>
           
           <div>
-            <label className="block text-sm mb-1" style={{ color: currentTheme.textColor }}>$ echo "Problems solved:"</label>
+            <label className="block text-sm mb-1" style={{ color: currentTheme.textColor }}> "Problems solved:"</label>
             <div className="flex space-x-4 p-2" style={{
               border: `1px solid ${currentTheme.borderColor}`,
               borderRadius: currentTheme.borderRadius,
@@ -370,7 +371,7 @@ const ThemeCpDialog = ({ isOpen, onClose, handle, onFormSubmit }) => {
                 className="space-y-2"
               >
                 <div>
-                  <label className="block text-sm mb-1" style={{ color: currentTheme.textColor }}>$ echo "Problem {index + 1}:"</label>
+                  <label className="block text-sm mb-1" style={{ color: currentTheme.textColor }}> "Problem {index + 1}:"</label>
                   <input
                     type="text"
                     placeholder="Contest ID"
@@ -426,7 +427,7 @@ const ThemeCpDialog = ({ isOpen, onClose, handle, onFormSubmit }) => {
                 className="font-bold text-center"
                 style={{ color: currentTheme.primaryColor }}
               >
-                $ echo "Theme CP problem added successfully!"
+                 "Theme CP problem added successfully!"
               </motion.p>
             )}
           </AnimatePresence>
@@ -543,7 +544,7 @@ const FetchCodeforces = ({ handle }) => {
 
   const fetchContests = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/proxy/codeforces/getContests");
+      const response = await axios.get(`${API_BASE_URL}/proxy/codeforces/getContests`);
       
       const contests = response.data.result.filter((contest) => contest.phase === "FINISHED");
    
@@ -556,7 +557,7 @@ const FetchCodeforces = ({ handle }) => {
       fetchProblemsRecursive(contests, handle);
     } catch (error) {
       console.error("Error fetching contests:", error);
-      toast.error("$ error: Failed to fetch contests. Try again.");
+      toast.error(": Failed to fetch contests. Try again.");
       setLoading(false);
     }
   };
@@ -576,7 +577,7 @@ const FetchCodeforces = ({ handle }) => {
   
     try {
       const contestId = contest.id;
-      const problemsRes = await axios.get(`http://localhost:5000/proxy/codeforces/getStandings?contestId=${contestId}`);
+      const problemsRes = await axios.get(`${API_BASE_URL}/proxy/codeforces/getStandings?contestId=${contestId}`);
       const allProblems = problemsRes.data.result.problems;
       const problemIndices = divProblemMap[div];
       
@@ -585,8 +586,8 @@ const FetchCodeforces = ({ handle }) => {
       );
   
       // Fetch both handles' submissions
-      const mainSubmissionsRes = await axios.get(`http://localhost:5000/proxy/codeforces/getSubmissions?handle=${handle}`);
-      const altSubmissionsRes = await axios.get(`http://localhost:5000/proxy/codeforces/getSubmissions?handle=${altHandle}`);
+      const mainSubmissionsRes = await axios.get(`${API_BASE_URL}/proxy/codeforces/getSubmissions?handle=${handle}`);
+      const altSubmissionsRes = await axios.get(`${API_BASE_URL}/proxy/codeforces/getSubmissions?handle=${altHandle}`);
       
       const mainSubmissions = mainSubmissionsRes.data.result || [];
       const altSubmissions = altSubmissionsRes.data.result || [];
@@ -607,7 +608,7 @@ const FetchCodeforces = ({ handle }) => {
         setProblem(firstUnsolved);
         setLoading(false);
   
-        await axios.post("http://localhost:5000/api/storeProblem", {
+        await axios.post(`${API_BASE_URL}/api/storeProblem`, {
           handle: handle,
           problem: firstUnsolved,
         });
@@ -618,7 +619,7 @@ const FetchCodeforces = ({ handle }) => {
       return fetchProblemsRecursive(contests, handle, index + 1);
     } catch (error) {
       console.error("Error fetching Codeforces data:", error);
-      toast.error("$ error: Failed to fetch problem data. Try again.");
+      toast.error(": Failed to fetch problem data. Try again.");
       setLoading(false);
     }
   };
@@ -626,7 +627,7 @@ const FetchCodeforces = ({ handle }) => {
   useEffect(() => {
     const fetchStoredProblem = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/getStoredProblem?handle=${handle}`);
+        const response = await axios.get(`${API_BASE_URL}/api/getStoredProblem?handle=${handle}`);
         
         if (response.data.problem) {
           setProblem(response.data.problem); 
@@ -645,28 +646,28 @@ const FetchCodeforces = ({ handle }) => {
   
   const handleFormSubmit = async (data) => {
     if (data.problems.length === 0) {
-      toast.error("$ error: No problems provided.");
+      toast.error(": No problems provided.");
       return;
     }
   
     const { contestId, problemIndex } = data.problems[0];
     
     try {
-      const response = await axios.get(`http://localhost:5000/proxy/codeforces/getStandings?contestId=${contestId}`);
+      const response = await axios.get(`${API_BASE_URL}/proxy/codeforces/getStandings?contestId=${contestId}`);
       const allProblems = response.data.result.problems;
       
       const fullProblem = allProblems.find(p => p.index === problemIndex);
 
       if (!fullProblem) {
-        toast.error(`$ error: Problem ${problemIndex} not found in Contest ${contestId}`);
+        toast.error(`: Problem ${problemIndex} not found in Contest ${contestId}`);
         return;
       }
   
-      await axios.delete(`http://localhost:5000/api/deleteProblem`, {
+      await axios.delete(`${API_BASE_URL}/api/deleteProblem`, {
         data: { handle: handle }
       });
   
-      await axios.post("http://localhost:5000/api/storeProblem", {
+      await axios.post(`${API_BASE_URL}/api/storeProblem`, {
         handle: handle,
         problem: fullProblem
       });
@@ -678,13 +679,13 @@ const FetchCodeforces = ({ handle }) => {
       toast.success("$ Theme CP problem set successfully!");
     } catch (error) {
       console.error("Error handling Theme CP problem:", error);
-      toast.error("$ error: Failed to set Theme CP problem. Try again.");
+      toast.error(": Failed to set Theme CP problem. Try again.");
     }
   };
   
   const initiateMarkAsSolved = () => {
     if (!problem) {
-      toast.error("$ error: No problem to check.");
+      toast.error(": No problem to check.");
       return;
     }
     setIsSolveConfirmationOpen(true);
@@ -692,7 +693,7 @@ const FetchCodeforces = ({ handle }) => {
   
   const markProblemAsSolved = async (xpDeductionPercent = 0, learningNotes = "") => {
     if (!problem) {
-      toast.error("$ error: No problem to check.");
+      toast.error(": No problem to check.");
       return;
     }
     
@@ -701,8 +702,8 @@ const FetchCodeforces = ({ handle }) => {
     
     try {
       // Fetch both handles' submissions
-      const mainSubmissionsRes = await axios.get(`http://localhost:5000/proxy/codeforces/getSubmissions?handle=${handle}`);
-      const altSubmissionsRes = await axios.get(`http://localhost:5000/proxy/codeforces/getSubmissions?handle=${altHandle}`);
+      const mainSubmissionsRes = await axios.get(`${API_BASE_URL}/proxy/codeforces/getSubmissions?handle=${handle}`);
+      const altSubmissionsRes = await axios.get(`${API_BASE_URL}/proxy/codeforces/getSubmissions?handle=${altHandle}`);
       
       const mainSubmissions = mainSubmissionsRes.data.result || [];
       const altSubmissions = altSubmissionsRes.data.result || [];
@@ -721,7 +722,7 @@ const FetchCodeforces = ({ handle }) => {
       
       // Check if either handle has solved the problem
       if (solvedSet.has(problemKey)) {
-        await axios.delete(`http://localhost:5000/api/deleteProblem`, {
+        await axios.delete(`${API_BASE_URL}/api/deleteProblem`, {
           data: { handle: handle, problemId: problem._id },
         });
         
@@ -747,7 +748,7 @@ const FetchCodeforces = ({ handle }) => {
             updateData.learningNotes = learningNotes;
           }
           
-          await axios.put(`http://localhost:5000/api/users/${handle}/update`, updateData);
+          await axios.put(`${API_BASE_URL}/api/users/${handle}/update`, updateData);
           
           if (xpDeductionPercent > 0) {
             toast.success(`$ Problem marked as solved with ${xpDeductionPercent}% XP deduction`);
@@ -758,17 +759,17 @@ const FetchCodeforces = ({ handle }) => {
           }
         } catch (error) {
           console.error("Error updating user:", error.response?.data || error.message);
-          toast.error("$ error: Failed to update XP. Try again.");
+          toast.error(": Failed to update XP. Try again.");
         }
         
         setProblem(null);
         fetchContests();
       } else {
-        toast.error("$ error: You haven't solved this problem yet. Try again.");
+        toast.error(": You haven't solved this problem yet. Try again.");
       }
     } catch (error) {
       console.error("Error checking problem status:", error);
-      toast.error("$ error: Error checking problem status. Try again.");
+      toast.error(": Error checking problem status. Try again.");
     } finally {
       setMarkingSolved(false);
     }
@@ -824,7 +825,7 @@ const FetchCodeforces = ({ handle }) => {
           borderRadius: currentTheme.borderRadius,
           color: currentTheme.textColor
         }}>
-          <p className="mb-3">$ echo "No unsolved problems found."</p>
+          <p className="mb-3"> "No unsolved problems found."</p>
           <button 
             onClick={fetchContests}
             className="px-4 py-2"

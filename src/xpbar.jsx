@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import API_BASE_URL from "./config";
 
 const TIERS = [
   { xp: 120, title: "Fastforces Speedrunner ⚡", next: 250 },
@@ -43,7 +44,7 @@ const XPBar = ({ levelData, xp, className }) => {
       </div>
       
       <div className="text-xs text-green-300 font-mono mb-1">
-        <span>$ cat progress.txt</span>
+        <span> progress.txt</span>
       </div>
       
       <pre className="text-green-400 font-mono text-xs mb-2">
@@ -79,7 +80,7 @@ export default function XPDisplay({ handle, className }) {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/users/${handle}`);
+        const response = await fetch(`${API_BASE_URL}/api/users/${handle}`);
         
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -121,10 +122,10 @@ export default function XPDisplay({ handle, className }) {
     return (
       <div className={`font-mono border border-red-500/30 p-4 bg-black/80 ${className || ''}`}>
         <div className="text-red-400 font-mono text-sm">
-          <span>$ ERROR: Failed to fetch user data</span>
+          <span> ERROR: Failed to fetch user data</span>
         </div>
         <div className="text-red-300 font-mono text-xs mt-1">
-          <span>$ cat error.log</span><br />
+          <span> error.log</span><br />
           <span>{error}</span>
         </div>
       </div>

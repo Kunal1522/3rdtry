@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from './context/ThemeContext';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
+import API_BASE_URL from './config';
 
 const SideQuests = ({ handle }) => {
   const { currentTheme } = useTheme();
@@ -18,11 +19,11 @@ const SideQuests = ({ handle }) => {
       setLoading(true);
       try {
         // Fetch quests
-        const questsResponse = await axios.get(`http://localhost:5000/api/users/${handle}/quests`);
+        const questsResponse = await axios.get(`${API_BASE_URL}/api/users/${handle}/quests`);
         setQuests(questsResponse.data || []);
         
         // Fetch user data to get current XP
-        const userResponse = await axios.get(`http://localhost:5000/api/users/${handle}`);
+        const userResponse = await axios.get(`${API_BASE_URL}/api/users/${handle}`);
         setUserXP(userResponse.data.experience);
       } catch (error) {
         console.error("Error fetching quests:", error);
@@ -43,7 +44,7 @@ const SideQuests = ({ handle }) => {
     }
     
     try {
-      const response = await axios.post(`http://localhost:5000/api/users/${handle}/quests`, {
+      const response = await axios.post(`${API_BASE_URL}/api/users/${handle}/quests`, {
         title: newQuest.title,
         description: newQuest.description,
         xpReward: parseInt(newQuest.xpReward) || 50
@@ -63,14 +64,14 @@ const SideQuests = ({ handle }) => {
   const handleCompleteQuest = async (questId) => {
     try {
       // Mark quest as completed
-      await axios.put(`http://localhost:5000/api/users/${handle}/quests/${questId}/complete`);
+      await axios.put(`${API_BASE_URL}/api/users/${handle}/quests/${questId}/complete`);
       
       // Find the quest to get the XP reward
       const completedQuest = quests.find(q => q._id === questId);
       
       if (completedQuest) {
         // Update user's XP
-        await axios.put(`http://localhost:5000/api/users/${handle}/update`, {
+        await axios.put(`${API_BASE_URL}/api/users/${handle}/update`, {
           experience: completedQuest.xpReward
         });
         
@@ -91,7 +92,7 @@ const SideQuests = ({ handle }) => {
   // Delete a quest
   const handleDeleteQuest = async (questId) => {
     try {
-      await axios.delete(`http://localhost:5000/api/users/${handle}/quests/${questId}`);
+      await axios.delete(`${API_BASE_URL}/api/users/${handle}/quests/${questId}`);
       setQuests(quests.filter(q => q._id !== questId));
       toast.success('Quest deleted successfully');
     } catch (error) {

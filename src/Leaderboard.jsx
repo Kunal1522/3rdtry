@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "./context/ThemeContext";
+import API_BASE_URL from "./config";
+import toast from "react-hot-toast";
 
 // Import the TIERS directly from xpbar.jsx
 const TIERS = [
@@ -278,17 +280,17 @@ export default function Leaderboard({ handle }) {
       try {
         setLoading(true);
         const skip = (page - 1) * limit;
-        const response = await axios.get(`http://localhost:5000/api/leaderboard?handle=${handle}&limit=${limit}&skip=${skip}`);
+        const response = await axios.get(`${API_BASE_URL}/api/leaderboard?handle=${handle}&limit=${limit}&skip=${skip}`);
         
         setEntries(response.data.entries);
         setTotalPages(Math.max(1, response.data.pagination.pages));
         
         // Also fetch daily summary
-        const dailyResponse = await axios.get(`http://localhost:5000/api/users/${handle}/dailyXP`);
+        const dailyResponse = await axios.get(`${API_BASE_URL}/api/users/${handle}/dailyXP`);
         setDailySummary(dailyResponse.data);
         
         // Fetch user data for tier tracking
-        const userResponse = await axios.get(`http://localhost:5000/api/users/${handle}`);
+        const userResponse = await axios.get(`${API_BASE_URL}/api/users/${handle}`);
         setUserData(userResponse.data);
         
         // Group entries by date

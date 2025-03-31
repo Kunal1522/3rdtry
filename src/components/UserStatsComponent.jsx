@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import axios from 'axios';
 import './UserStatsComponent.css';
+import API_BASE_URL from '../config';
 
 // Define the progression tiers
 const TIERS = [
@@ -93,7 +94,7 @@ const UserStatsComponent = ({ userData }) => {
       
       setDailyActivity(prev => ({ ...prev, loading: true })); 
       try {
-        const response = await axios.get(`http://localhost:5000/api/users/${userData.handle}/daily-activity`);
+        const response = await axios.get(`${API_BASE_URL}/api/users/${userData.handle}/daily-activity`);
         
         setDailyActivity({
           problemsSolved: response.data.problemsSolved || 0,

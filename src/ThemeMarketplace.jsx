@@ -38,7 +38,7 @@ const ThemePreviewModal = ({ theme, isOpen, onClose }) => {
             className="text-sm px-2 py-1"
             style={{ borderColor: theme.borderColor }}
           >
-            $ close
+            Close
           </button>
         </div>
         
@@ -46,7 +46,7 @@ const ThemePreviewModal = ({ theme, isOpen, onClose }) => {
           {/* Theme Info Section */}
           <div>
             <div className="mb-4">
-              <div className="text-sm mb-1" style={{ color: theme.accentColor }}>$ cat theme_info.md</div>
+              <div className="text-sm mb-1" style={{ color: theme.accentColor }}>Theme Info</div>
               <div className="border p-3" style={{ 
                 borderColor: theme.borderColor,
                 backgroundColor: theme.cardBgColor
@@ -63,7 +63,7 @@ const ThemePreviewModal = ({ theme, isOpen, onClose }) => {
             
             {/* Color Palette */}
             <div className="mb-4">
-              <div className="text-sm mb-1" style={{ color: theme.accentColor }}>$ cat color_palette.css</div>
+              <div className="text-sm mb-1" style={{ color: theme.accentColor }}> color_palette.css</div>
               <div className="border p-3" style={{ 
                 borderColor: theme.borderColor,
                 backgroundColor: theme.cardBgColor
@@ -92,7 +92,7 @@ const ThemePreviewModal = ({ theme, isOpen, onClose }) => {
           <div>
             {/* Buttons */}
             <div className="mb-4">
-              <div className="text-sm mb-1" style={{ color: theme.accentColor }}>$ cat buttons.jsx</div>
+              <div className="text-sm mb-1" style={{ color: theme.accentColor }}>Buttons</div>
               <div className="border p-3" style={{ 
                 borderColor: theme.borderColor,
                 backgroundColor: theme.cardBgColor
@@ -124,7 +124,7 @@ const ThemePreviewModal = ({ theme, isOpen, onClose }) => {
             
             {/* Card Example */}
             <div className="mb-4">
-              <div className="text-sm mb-1" style={{ color: theme.accentColor }}>$ cat card_component.jsx</div>
+              <div className="text-sm mb-1" style={{ color: theme.accentColor }}>Components</div>
               <div className="border p-3" style={{ 
                 borderColor: theme.borderColor,
                 backgroundColor: theme.cardBgColor
@@ -141,7 +141,7 @@ const ThemePreviewModal = ({ theme, isOpen, onClose }) => {
                       borderColor: theme.borderColor,
                       color: theme.textColor
                     }}>
-                      $ action
+                       action
                     </button>
                   </div>
                 </div>
@@ -150,7 +150,7 @@ const ThemePreviewModal = ({ theme, isOpen, onClose }) => {
             
             {/* Progress Bar */}
             <div className="mb-4">
-              <div className="text-sm mb-1" style={{ color: theme.accentColor }}>$ cat progress_bar.jsx</div>
+              <div className="text-sm mb-1" style={{ color: theme.accentColor }}> progress_bar.jsx</div>
               <div className="border p-3" style={{ 
                 borderColor: theme.borderColor,
                 backgroundColor: theme.cardBgColor
@@ -203,7 +203,7 @@ const ThemeCard = ({ theme, isOwned, onPurchase, onSwitch, isActive, userXP }) =
             className="absolute top-2 right-2 px-2 py-1 text-xs"
             style={{ color: theme.primaryColor, border: `1px solid ${theme.borderColor}` }}
           >
-            $ active_theme
+            Active Theme
           </div>
         )}
         
@@ -221,7 +221,7 @@ const ThemeCard = ({ theme, isOwned, onPurchase, onSwitch, isActive, userXP }) =
           onClick={() => setShowPreview(true)}
         >
           <div className="text-sm" style={{ color: theme.accentColor }}>
-            $ cat theme_preview.sh
+            Theme Preview
           </div>
           <div 
             className="h-16 w-full mt-1 flex items-center justify-center rounded-none overflow-hidden"
@@ -234,7 +234,7 @@ const ThemeCard = ({ theme, isOwned, onPurchase, onSwitch, isActive, userXP }) =
               className="text-center flex flex-col items-center"
               style={{ color: theme.textColor }}
             >
-              <span style={{ color: theme.primaryColor }}>$ echo</span>
+            
               <span>Theme Preview</span>
               <span className="text-xs mt-1" style={{ color: theme.accentColor }}>
                 (Click for detailed preview)
@@ -251,7 +251,7 @@ const ThemeCard = ({ theme, isOwned, onPurchase, onSwitch, isActive, userXP }) =
                 <span className="font-bold">{theme.cost} XP</span>
                 {isOwned && theme.id !== 'default' && (
                   <div className="text-xs mt-1" style={{ color: theme.accentColor }}>
-                    $ switch_fee: {switchCost} XP
+                   Switch Fee  {switchCost} XP
                   </div>
                 )}
               </div>
@@ -276,7 +276,7 @@ const ThemeCard = ({ theme, isOwned, onPurchase, onSwitch, isActive, userXP }) =
                   opacity: isActive || (theme.id !== 'default' && !canAffordSwitch) ? 0.5 : 1
                 }}
               >
-                {isActive ? '$ active' : '$ switch'}
+                {isActive ? 'Active' : 'Switch'}
               </button>
             ) : (
               <button
@@ -304,7 +304,7 @@ const ThemeCard = ({ theme, isOwned, onPurchase, onSwitch, isActive, userXP }) =
           >
             {!isOwned && !canAfford && `$ error: Need ${theme.cost - userXP} more XP`}
             {isOwned && theme.id !== 'default' && !canAffordSwitch && !isActive && (
-              `$ error: Need ${switchCost - userXP} more XP to switch`
+              ` error: Need ${switchCost - userXP} more XP to switch`
             )}
           </motion.div>
         )}
@@ -415,7 +415,7 @@ const ThemeMarketplace = ({ handle }) => {
         if (result.success) {
           toast.success(`$ Theme purchased and applied!`);
         } else {
-          toast.error(`$ error: ${result.message}`);
+          toast.error(` error: ${result.message}`);
         }
       },
       themeId
@@ -432,9 +432,9 @@ const ThemeMarketplace = ({ handle }) => {
       switchTheme(themeId)
         .then(result => {
           if (result.success) {
-            toast.success('$ Switched to default theme');
+            toast.success(' Switched to default theme');
           } else {
-            toast.error(`$ error: ${result.message}`);
+            toast.error(` error: ${result.message}`);
           }
         });
       return;
@@ -444,9 +444,9 @@ const ThemeMarketplace = ({ handle }) => {
     
     setConfirmDialog({
       isOpen: true,
-      title: `$ switch_theme.sh --theme="${theme.name}"`,
+      title: ` Switch  to theme="${theme.name}"`,
       message: `Switching to ${theme.name} will cost ${switchCost} XP. Continue?`,
-      confirmText: '$ confirm_switch',
+      confirmText: ' Confirm Switch',
       onConfirm: async () => {
         setConfirmDialog(prev => ({ ...prev, isOpen: false }));
         
@@ -454,7 +454,7 @@ const ThemeMarketplace = ({ handle }) => {
         if (result.success) {
           toast.success(`$ Theme applied successfully!`);
         } else {
-          toast.error(`$ error: ${result.message}`);
+          toast.error(` error: ${result.message}`);
         }
       },
       themeId
@@ -487,7 +487,7 @@ const ThemeMarketplace = ({ handle }) => {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <h1 className="text-2xl font-bold mb-2" style={{ color: currentTheme.primaryColor }}>
-              $ theme_marketplace.sh
+              Change Themes
             </h1>
             <p className="text-sm opacity-80" style={{ color: currentTheme.textColor }}>
               Purchase and switch between themes using your earned XP
@@ -498,7 +498,7 @@ const ThemeMarketplace = ({ handle }) => {
             className="px-4 py-2 font-mono text-sm border"
             style={{ borderColor: currentTheme.borderColor }}
           >
-            <span className="opacity-70">$ cat balance.xp | </span>
+            <span className="opacity-70"> Balance | </span>
             <span className="font-bold">
               {loadingXP ? 'loading...' : `${userXP} XP`}
             </span>

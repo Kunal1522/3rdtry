@@ -1,4 +1,5 @@
 import axios from "axios";
+import API_BASE_URL from "../src/config.js";
 
 const xpMap = {
     "Div. 1D": 50,
@@ -12,7 +13,7 @@ const xpMap = {
 // Function to get the contest division using your API
 export async function getContestDivision(contestId) {
     try {
-        const response = await axios.get(`http://localhost:5000/proxy/codeforces/getStandings?contestId=${contestId}`);
+        const response = await axios.get(`${API_BASE_URL}/proxy/codeforces/getStandings?contestId=${contestId}`);
         const contestName = response.data?.result?.contest?.name;
 
         if (!contestName) return null;
