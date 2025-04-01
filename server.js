@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import axios from "axios";
 import dotenv from "dotenv";
-import connectDB from "./config/db.js"; // Import MongoDB connection
+import mongoose from "mongoose"; // Import mongoose
 import User from "./models/User.js"; // Import User Schema
 import Problem from "./models/Problem.js"; // Import Problem Schema
 import LeaderboardEntry from "./models/LeaderboardEntry.js"; // Import LeaderboardEntry Schema
@@ -10,9 +10,6 @@ import Quest from "./models/Quest.js"; // Import Quest Schema
 
 // Load environment variables
 dotenv.config(); 
-
-// Connect to MongoDB
-connectDB(); 
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -23,6 +20,41 @@ app.use(express.json()); // Enable JSON parsing
 
 // Log server info on startup
 console.log(`🌐 API Base URL: ${WEBSITE_URL}`);
+
+// Initialize MongoDB connection promise
+let cachedDb = null;
+
+// Modified connectDB function
+const connectDB = async () => {
+  if (cachedDb) {
+    return cachedDb;
+  }
+  try {
+    const conn = await mongoose.connect(process.env.MONGODB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    cachedDb = conn;
+    console.log('MongoDB Connected');
+    return conn;
+  } catch (error) {
+    console.error('Error connecting to MongoDB:', error);
+    throw error;
+  }
+};
+
+// Middleware to ensure DB connection
+app.use(async (req, res, next) => {
+  try {
+    if (!cachedDb) {
+      await connectDB();
+    }
+    next();
+  } catch (error) {
+    console.error('Database connection error:', error);
+    res.status(500).json({ error: 'Database connection failed' });
+  }
+});
 
 app.post("/api/storeProblem", async (req, res) => {
   const { handle, problem } = req.body;
