@@ -438,5 +438,9 @@ app.put("/api/users/:handle/update-highest-xp", async (req, res) => {
   }
 });
 
-// START SERVER
+// Export the Express API
+if (process.env.NODE_ENV !== 'production') {
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+}
+
+export default app;
