@@ -2,11 +2,17 @@ import express from "express";
 import cors from "cors";
 import axios from "axios";
 import dotenv from "dotenv";
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 import connectDB from "./config/db.js"; // Import MongoDB connection
 import User from "./models/User.js"; // Import User Schema
 import Problem from "./models/Problem.js"; // Import Problem Schema
 import LeaderboardEntry from "./models/LeaderboardEntry.js"; // Import LeaderboardEntry Schema
 import Quest from "./models/Quest.js"; // Import Quest Schema
+
+// Get directory name in ES module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // Load environment variables
 dotenv.config(); 
@@ -16,10 +22,16 @@ connectDB();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const WEBSITE_URL = process.env.WEBSITE_URL || 'http://localhost:5000';
+// Use VITE_API_URL from environment or construct from host
+const WEBSITE_URL = process.env.VITE_API_URL || `http://localhost:${PORT}`;
 
 app.use(cors());
 app.use(express.json()); // Enable JSON parsing
+
+// Serve static files from the dist directory in production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(join(__dirname, 'dist')));
+}
 
 // Log server info on startup
 console.log(`🌐 API Base URL: ${WEBSITE_URL}`);
@@ -440,7 +452,20 @@ app.put("/api/users/:handle/update-highest-xp", async (req, res) => {
 
 // Add a health check endpoint
 app.get("/", (req, res) => {
-  res.json({ message: "API is running" });
+  if (process.env.NODE_ENV === 'production') {
+    res.json({ message: "API is running" });
+  } else {
+    res.json({ message: "API is running. In development, frontend is served by Vite dev server." });
+  }
+});
+
+// Catch-all route to serve index.html for client-side routing
+app.get('*', (req, res) => {
+  if (process.env.NODE_ENV === 'production') {
+    res.sendFile(join(__dirname, 'dist', 'index.html'));
+  } else {
+    res.json({ message: "API is running. In development, frontend is served by Vite dev server." });
+  }
 });
 
 // Add a catch-all error handler
